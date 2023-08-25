@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: FLOWER_DELIVERY(E-COMMERCE)
+  version: 1.0.0
+  description: AN API DELIVERYING FLOWER
+paths:
+  /accounts/sign-in/:
+    post:
+      operationId: accounts_sign_in_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignIn'
+              examples:
+                Example:
+                  value:
+                    status: Success
+                    code: 200
+                    data:
+                      refresh_token: string
+                      access_token: string
+          description: ''
+  /accounts/sign-up/:
+    post:
+      operationId: accounts_sign_up_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+              examples:
+                Example:
+                  value:
+                    info: Success
+                    code: 201
+                    data:
+                      first_name: string
+                      last_name: string
+                      email: user@example.com
+          description: ''
+components:
+  schemas:
+    SignIn:
+      type: object
+      description: Serializer for signing in
+      properties:
+        email_or_username:
+          type: string
+        password:
+          type: string
+      required:
+      - email_or_username
+      - password
+    SignUp:
+      type: object
+      description: Serializer for signing up
+      properties:
+        phone_number:
+          type: string
+          writeOnly: true
+          minLength: 25
+      required:
+      - phone_number
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
