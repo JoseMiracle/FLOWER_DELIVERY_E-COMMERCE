@@ -9,8 +9,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 User = get_user_model()
 
 
-
-
 class SignUpSerializer(serializers.ModelSerializer):
     
     """
@@ -28,7 +26,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data: dict) -> dict[str, Any]:
         """
-        This is for creating a user instance
+            This is for creating a user instance
         """
         user = User.objects.create_user(**validated_data)
         return user
@@ -38,7 +36,7 @@ class SignInSerializer(serializers.ModelSerializer):
     Serializer for signing in
     """
 
-    phone_number = serializers.CharField(write_only=True, min_length=25)
+    phone_number = serializers.CharField(write_only=True, min_length=10)
 
     class Meta:
         model = User
@@ -51,11 +49,16 @@ class SignInSerializer(serializers.ModelSerializer):
             Validates if a number exist in the DB
         """
         user = User.objects.filter(phone_number=attrs["phone_number"]).first()
-
+        
         if user.DoesNotExist():
             return {
-                "error":"accounts doesn't exist" 
+                "error":"Pls receheck the info provided or signup" 
             }
+        
+        else:
+            return {
+            "message": "Welcome"
+        }
     
     @transaction.atomic
     def create(self, validated_data: dict) -> dict[str, Any]:
@@ -64,19 +67,3 @@ class SignInSerializer(serializers.ModelSerializer):
         """
         user = User.objects.create_user(**validated_data)
         return user
-
-
-class SignInSerializer(serializers.Serializer):
-    """
-    Serializer for signing in
-    """
-
-    email_or_username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True)
-
-    def validate(self, attrs: dict):
-        """
-        This is for validating credentiials for signing in
-        """
-
-

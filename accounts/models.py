@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -11,18 +11,16 @@ class CustomUserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, phone_number, password=None, email="none@mail.com", **extra_fields):
+    def create_user(self, phone_number,password=None, **extra_fields):
         """
-        Create and save a user with the given email and password.
+        Create and save a user with the phone_number.
         """
-        if not email:
-            raise ValueError(_("The Email must be set"))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(phone_number=phone_number, **extra_fields)
+        user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, phone_number, password, email="none@mail.com", **extra_fields):
+    def create_superuser(self, phone_number, **extra_fields):
         """
         Create and save a SuperUser with the given email and password.
         """
@@ -34,13 +32,13 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
-        return self.create_user(phone_number, password, email, **extra_fields)
+        return self.create_user(phone_number, **extra_fields)
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     phone_number = models.CharField(max_length=25, unique=True)
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -52,3 +50,12 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.phone_number
+    
+class OTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=25, null=False)
+
+    def __str__(self):
+        return f"{self.user.phone_number} {self.otp}"
+    
+
