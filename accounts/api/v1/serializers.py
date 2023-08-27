@@ -30,15 +30,16 @@ class SignUpSerializer(serializers.ModelSerializer):
         This is for creating a user instance
         """
         # Generate a random integer with 5 digits
-        generated_otp = random.randrange(100000,1000000)
+        generated_otp = random.randrange(100000, 1000000)
         user = User.objects.create_user(**validated_data)
         user_otp = OTP.objects.create(otp=generated_otp, user=user)
         return user
-    
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data["info"]  = "Pls check your phone for an otp to continue the sign up process"
+        data["info"] = "Pls check your phone for an otp to continue the sign up process"
         return data
+
 
 class SignInSerializer(serializers.ModelSerializer):
     """
@@ -70,10 +71,12 @@ class SignInSerializer(serializers.ModelSerializer):
 
 class VerifyOtpSerializer(serializers.Serializer):
     """
-        This  serializer is for verifying the otp an unverified or inactive user provides
+    This  serializer is for verifying the otp an unverified or inactive user provides
     """
+
     otp = serializers.CharField(min_length=6, write_only=True)
     phone_number = serializers.CharField(min_length=10, write_only=True)
+
     def validate(self, attrs):
         error_messages = {
             "error-mssg-1": {
@@ -82,19 +85,39 @@ class VerifyOtpSerializer(serializers.Serializer):
         }
 
         user = User.objects.filter(phone_number=attrs["phone_number"]).first()
-    
+
         if user:
             user_otp = OTP.objects.filter(user=user, otp=attrs["otp"]).first()
 
-
             if user_otp and attrs["otp"] == user_otp.otp:
                 user.is_active = True
-                user.save() 
-                user_otp.delete() # NOTE: Use celery to remove otp after a certain period
+                user.save()
+                user_otp.delete()  # NOTE: Use celery to remove otp after a certain period
                 return attrs
             else:
                 raise serializers.ValidationError(error_messages["error-mssg-1"])
-            
-        else:    
+
+        else:
             raise serializers.ValidationError(error_messages["error-mssg-1"])
-        
+
+
+# class ResetOtpSerializer(serializers.Serializer):
+#     """
+#         This  serializer is for resetting password
+#     """
+#     phone_number = serializers.CharField(min_length=10, write_only=True)
+
+#     def validate(self, attrs):
+#         error_messages = {
+#             "error-mssg-1": {
+#                 "INCORRECT CREDENTIALS": "Pls recheck the credentials provided"
+#             }
+#         }
+
+#         user = User.objects.filter(phone_number=attrs["phone_number"]).first()
+
+#         if user:
+#             generated_otp = random.randrange(100000,1000000)
+#             user_otp = OTP.objects.create(otp=generated_otp, user=user)
+#         else:
+#              raise serializers.ValidationError(error_messages["error-mssg-1"])

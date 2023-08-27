@@ -101,6 +101,33 @@ class VerifyOtpAPIView(generics.GenericAPIView):
             )
 
 
+# class ResetOtpAPIView(generics.GenericAPIView):
+#     serializer_class = VerifyOtpSerializer
+#     permission_classes = (permissions.AllowAny,)
+#     http_method_names = ("post",)
+
+#     @extend_schema(
+#         examples=[
+#             OpenApiExample(
+#                 "Example",
+#                 response_only=True,
+#                 value={
+#                     "status": "Ok",
+#                     "code": 200,
+#                     "data": {"Info": "Account activated"},
+#                 },
+#             )
+#         ]
+#     )
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             return Response(
+#                 {"Info": "Account activated"},
+#                 status=status.HTTP_200_OK,
+#             )
+
+
 class GoogleLoginView(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
 
