@@ -60,4 +60,12 @@ class OTP(models.Model):
     def __str__(self):
         return f"{self.user.phone_number} {self.otp}"
     
+# NOTE: will get back to be after clarification
+# class ClientFlowerReminder(models.Model):
+#     """
+#         This is for reminding a client about the flower
+#         they 7 days before the delivery day
+#     """
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     email = models.EmailField(max_length=40, blank=False, null=False)
 
