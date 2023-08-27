@@ -37,23 +37,25 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    phone_number = models.CharField(max_length=25, unique=True)
+    username = models.CharField(max_length=35)
+    phone_number = models.CharField(unique=True, max_length=20) 
     email = models.EmailField(max_length=255, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-
+        
     def __str__(self):
         return self.phone_number
-    
+        
 class OTP(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     otp = models.CharField(max_length=25, null=False)
+    created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.phone_number} {self.otp}"
