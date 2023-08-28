@@ -18,11 +18,18 @@ class SignUpSerializer(serializers.ModelSerializer):
     Serializer for signing up
     """
 
-    phone_number = serializers.CharField(write_only=True, min_length=10)
+    phone_number = serializers.CharField(write_only=True, min_length=10, max_length=20)
 
     class Meta:
         model = User
         fields = ("phone_number",)
+
+    def validate_phone_number(self, phone_number):
+        user = User.objects.filter(phone_number=phone_number)
+        if user.exists():
+            raise serializers.ValidationError("phone number exists")
+
+        return phone_number
 
     @transaction.atomic
     def create(self, validated_data: dict) -> dict[str, Any]:
