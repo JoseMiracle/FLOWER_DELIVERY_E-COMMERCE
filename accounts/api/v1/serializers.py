@@ -62,11 +62,14 @@ class SignInSerializer(serializers.ModelSerializer):
 
         user = User.objects.filter(phone_number=phone_number).first()
 
-        if user.is_active:
-            return phone_number
+        # if user.is_active:
+        #     return phone_number
 
-        else:
+        if (user is None) or (user.is_active == False):
             raise serializers.ValidationError(error_messages["error-mssg-1"])
+
+        elif user.is_active:
+            return phone_number
 
 
 class VerifyOtpSerializer(serializers.Serializer):

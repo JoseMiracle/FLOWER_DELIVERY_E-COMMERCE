@@ -1,0 +1,4 @@
+PRICE_OPTIONS = {
+        "ONE_TIME": "ONE_TIME",
+        "SUBSCRIBTION": "SUBSCRIBTION"
+    }

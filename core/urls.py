@@ -18,9 +18,9 @@ urlpatterns = [
     path("to-be-hidden/", admin.site.urls),
     path("api/accounts/", include("accounts.api.v1.urls"), name="accounts"),
     path(
-        "api/flower_delivery/",
+        "api/flower/",
         include("flower_delivery.api.v1.urls"),
-        name="flower_delivery",
+        name="flower",
     ),
 ]
 
