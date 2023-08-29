@@ -44,12 +44,14 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     "cloudinary_storage",
     "cloudinary",
+    "django_extensions",
     # SOCIAL LOGINS
     "django.contrib.sites",
     "allauth",
     "allauth.account",
     "dj_rest_auth.registration",
     "allauth.socialaccount",
+
     # SOCIAL OAUTH PROVIDERS
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.apple",

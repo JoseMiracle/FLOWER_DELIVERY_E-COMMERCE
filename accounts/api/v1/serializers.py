@@ -3,10 +3,8 @@ from typing import Any
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Q
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from accounts.utils import send_otp
 from accounts.models import OTP
 
 User = get_user_model()
@@ -28,7 +26,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         user = User.objects.filter(phone_number=phone_number)
         if user.exists():
             raise serializers.ValidationError("phone number exists")
-
+        
         return phone_number
 
     @transaction.atomic
@@ -37,8 +35,9 @@ class SignUpSerializer(serializers.ModelSerializer):
         This is for creating a user instance
         """
         # Generate a random integer with 5 digits
-        generated_otp = random.randrange(100000, 1000000)
         user = User.objects.create_user(**validated_data)
+        generated_otp = random.randrange(100000, 1000000)
+        send_otp(generated_otp=generated_otp, phone_number=validated_data["phone_number"])
         user_otp = OTP.objects.create(otp=generated_otp, user=user)
         return user
 

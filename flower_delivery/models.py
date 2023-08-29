@@ -29,10 +29,11 @@ class Vase(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    item_name = models.CharField(max_length=50, blank=False, null=False)
+    item_name = models.CharField(max_length=50)
     number_of_item = models.IntegerField(default=0)
     price = models.IntegerField(default=0)
-    price_option = models.CharField(max_length=20, null=False, blank=False)
+    price_option = models.CharField(max_length=20)
+    in_cart = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 
