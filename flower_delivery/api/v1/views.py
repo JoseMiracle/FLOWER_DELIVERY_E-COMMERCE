@@ -4,8 +4,9 @@ from flower_delivery.api.v1.serializers import (
     FlowerSerializer, 
     FlowerVariantSerializer,  
     VaseSerializer,
-    ItemToCartSerializer
-
+    ItemToCartSerializer,
+    BookACallSerializer,
+    
 )
 from drf_spectacular.utils import OpenApiExample, extend_schema
 from flower_delivery.permissions import IsAdminOrReadOnly
@@ -129,6 +130,11 @@ class CartAPIView(generics.ListCreateAPIView):
        return super().get(request, *args, **kwargs)
    
 
+class BookACallAPIView(generics.CreateAPIView):
+    serializer_class = BookACallSerializer
+    permission_classes = (permissions.AllowAny,)
 
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 # class RemoveItemFromCart(generics.RetrieveUpdateDestroyAPIView):
 

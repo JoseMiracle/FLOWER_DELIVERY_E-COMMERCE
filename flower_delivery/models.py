@@ -38,3 +38,8 @@ class Cart(models.Model):
     updated_time = models.DateTimeField(auto_now=True)
 
 
+class CallMe(models.Model):
+    phone_number = models.CharField(max_length=20, blank=False)
+
+    def __str__(self) -> str:
+        return self.number

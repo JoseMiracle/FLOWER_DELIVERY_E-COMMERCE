@@ -100,7 +100,6 @@ class VerifyOtpAPIView(generics.GenericAPIView):
                 status=status.HTTP_200_OK,
             )
 
-
 # class ResetOtpAPIView(generics.GenericAPIView):
 #     serializer_class = VerifyOtpSerializer
 #     permission_classes = (permissions.AllowAny,)

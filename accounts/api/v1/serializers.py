@@ -26,6 +26,9 @@ class SignUpSerializer(serializers.ModelSerializer):
         user = User.objects.filter(phone_number=phone_number)
         if user.exists():
             raise serializers.ValidationError("phone number exists")
+
+        if phone_number[1:].isdigit() == False:
+            raise serializers.ValidationError("Pls enter a number")
         
         return phone_number
 
@@ -38,7 +41,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         generated_otp = random.randrange(100000, 1000000)
         send_otp(generated_otp=generated_otp, phone_number=validated_data["phone_number"])
-        user_otp = OTP.objects.create(otp=generated_otp, user=user)
+        OTP.objects.create(otp=generated_otp, user=user)
         return user
 
     def to_representation(self, instance):
@@ -67,15 +70,17 @@ class SignInSerializer(serializers.ModelSerializer):
         }
 
         user = User.objects.filter(phone_number=phone_number).first()
+        
+        if phone_number[1:].isdigit() == False:
+            raise serializers.ValidationError("Pls enter a number")
 
-        # if user.is_active:
-        #     return phone_number
 
         if (user is None) or (user.is_active == False):
             raise serializers.ValidationError(error_messages["error-mssg-1"])
 
         elif user.is_active:
             return phone_number
+
 
 
 class VerifyOtpSerializer(serializers.Serializer):
@@ -108,6 +113,8 @@ class VerifyOtpSerializer(serializers.Serializer):
 
         else:
             raise serializers.ValidationError(error_messages["error-mssg-1"])
+
+
 
 
 # class ResetOtpSerializer(serializers.Serializer):

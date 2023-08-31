@@ -1,6 +1,12 @@
 from rest_framework import serializers
 
-from flower_delivery.models import Cart, Flower, FlowerVariant, Vase
+from flower_delivery.models import (
+    Cart, 
+    Flower, 
+    FlowerVariant, 
+    Vase,
+    CallMe,
+    )
 from flower_delivery.utils import PRICE_OPTIONS
 
 
@@ -94,4 +100,11 @@ class ItemToCartSerializer(serializers.ModelSerializer):
             return price - (price * 0.25)
         
 
+class BookACallSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = CallMe
+        fields = ('phone_number',)
 
+    def create(self, validated_data):
+        return super().create(validated_data)
