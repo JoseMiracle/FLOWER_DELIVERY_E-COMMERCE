@@ -24,7 +24,7 @@ class FlowerSerializer(serializers.ModelSerializer):
 
 
 class FlowerVariantSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(read_only=True)
+    image = serializers.ImageField(required=True)
     price = serializers.IntegerField(required=True)
 
     class Meta:
@@ -41,6 +41,8 @@ class FlowerVariantSerializer(serializers.ModelSerializer):
 
 
 class VaseSerializer(serializers.ModelSerializer):
+    price = serializers.IntegerField(required=True)
+
     class Meta:
         model = Vase
         fields = ("vase_name", "image", "price")
