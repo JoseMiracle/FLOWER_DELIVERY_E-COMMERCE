@@ -6,7 +6,7 @@ load_dotenv()
 def send_otp(generated_otp, phone_number):
     url = "https://api.ng.termii.com/api/sms/otp/send"
     payload = {
-            "api_key" : os.getenv('API_KEY'),
+            "api_key" : os.getenv('_API_KEY'),
             "message_type" : "NUMERIC",
             "to" : phone_number,
             "from" : "N-Alert",

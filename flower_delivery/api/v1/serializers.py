@@ -6,6 +6,7 @@ from flower_delivery.models import (
     FlowerVariant, 
     Vase,
     CallMe,
+    EmailsToRemindAboutDelivery,
     )
 from flower_delivery.utils import PRICE_OPTIONS
 
@@ -108,5 +109,16 @@ class BookACallSerializer(serializers.ModelSerializer):
         model = CallMe
         fields = ('phone_number',)
 
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+class EmailsToRemindAboutDeliverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailsToRemindAboutDelivery
+        fields = ('email',)
+    
+    def validate(self, attrs):
+        return super().validate(attrs)
+    
     def create(self, validated_data):
         return super().create(validated_data)

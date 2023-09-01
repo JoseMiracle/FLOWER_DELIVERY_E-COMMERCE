@@ -3,6 +3,7 @@ Django settings for core project.
 
 """
 import os
+import dj_database_url
 from datetime import timedelta
 from pathlib import Path
 
@@ -17,11 +18,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DEBUG"))
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+DEBUG = int(os.getenv("DEBUG"))
+
+ALLOWED_HOSTS = ['*']
+
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -34,17 +38,23 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     # Local Apps
     "accounts",
     "flower_delivery",
+
     # THIRD PARTY APPS
     "drf_spectacular",
+    "corsheaders",
+    "whitenoise.runserver_nostatic",
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
     "cloudinary_storage",
     "cloudinary",
     "django_extensions",
+    
+    
     # SOCIAL LOGINS
     "django.contrib.sites",
     "allauth",
@@ -59,7 +69,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -121,12 +133,17 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if DEBUG == 1:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+
+else:
+    DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+
 
 
 # Password validation
@@ -174,11 +191,33 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
+
+STORAGES = {
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"}
+}
+
+STATIC_URL = "/staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
+# CORS SETTINGS
+
+CORS_ALLOWED_ORIGINS = [
+"https://kyiv-luxebouquets.webflow.io",
+"http://localhost:5173",
+]
+
+CORS_ALLOW_METHODS = [
+'DELETE',
+'GET',
+'OPTIONS',
+'PATCH',
+'POST',
+'PUT',
+]

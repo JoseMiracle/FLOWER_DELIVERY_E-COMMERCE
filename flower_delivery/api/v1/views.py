@@ -6,7 +6,7 @@ from flower_delivery.api.v1.serializers import (
     VaseSerializer,
     ItemToCartSerializer,
     BookACallSerializer,
-    
+    EmailsToRemindAboutDeliverySerializer,
 )
 from drf_spectacular.utils import OpenApiExample, extend_schema
 from flower_delivery.permissions import IsAdminOrReadOnly
@@ -138,3 +138,25 @@ class BookACallAPIView(generics.CreateAPIView):
         return super().post(request, *args, **kwargs)
 # class RemoveItemFromCart(generics.RetrieveUpdateDestroyAPIView):
 
+
+class EmailsToRemindAboutDeliveryAPIView(generics.CreateAPIView):
+    serializer_class = EmailsToRemindAboutDeliverySerializer
+    permission_classes = (permissions.AllowAny,)
+
+    @extend_schema(
+        examples=[
+            OpenApiExample(
+                "Example",
+                response_only=True,
+                value={
+                    "info": "Success",
+                    "code":201,
+                    "data": {
+                    "email": "mimi@mail.com"
+                    },
+                },
+            )
+        ]
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)

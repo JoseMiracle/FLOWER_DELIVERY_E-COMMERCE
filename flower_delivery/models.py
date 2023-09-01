@@ -43,3 +43,9 @@ class CallMe(models.Model):
 
     def __str__(self) -> str:
         return self.number
+
+class EmailsToRemindAboutDelivery(models.Model):
+    email = models.CharField(max_length=60, blank=False)
+
+    def __str__(self):
+        return self.email
