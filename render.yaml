@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: skillsforge_email_service
+    name: flower-delivery
     region: oregon
     env: python
     plan: free
