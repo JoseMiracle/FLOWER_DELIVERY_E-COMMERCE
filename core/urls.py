@@ -42,8 +42,17 @@ urlpatterns += [
     ),
 ]
 
-# OAUTH LOGINS
+# OAUTH LOGINS NOTE: TOBE REMOVED IF THE ORDER WAY WORKS
 urlpatterns += [
     path("rest-auth/google/", GoogleLoginView.as_view(), name="google_login"),
     path("rest-auth/apple", AppleLoginView.as_view(), name="apple_view"),
+]
+
+
+from django.urls import re_path
+
+urlpatterns += [
+
+    re_path('oauth-api/', include('drf_social_oauth2.urls', namespace='drf'))
+
 ]

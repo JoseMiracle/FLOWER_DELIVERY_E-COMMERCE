@@ -54,7 +54,10 @@ INSTALLED_APPS = [
     "cloudinary",
     "django_extensions",
     
-    
+    # OAUTH2
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
     # SOCIAL LOGINS
     "django.contrib.sites",
     "allauth",
@@ -88,8 +91,15 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
+        'drf_social_oauth2.authentication.SocialAuthentication'
     ),
 }
+# AUTHENTICATION BACKENDS
+AUTHENTICATION_BACKENDS = [
+   'drf_social_oauth2.backends.DjangoOAuth2',
+   'django.contrib.auth.backends.ModelBackend',
+]
 
 # SIMPLEJWT SETTINGS
 SIMPLE_JWT = {
@@ -122,6 +132,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -220,4 +232,16 @@ CORS_ALLOW_METHODS = [
 'PATCH',
 'POST',
 'PUT',
+]
+
+
+# OAUTH SETTINGS
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+   'https://www.googleapis.com/auth/userinfo.email',
+   'https://www.googleapis.com/auth/userinfo.profile',
 ]

@@ -12,8 +12,8 @@ Welcome to Flower Delivery, an elegant flower delivery e-commerce platform built
 - [Getting Started](#getting-started)
 - [API Documentation](#api-documentation)
 - [Order Flow](#order-flow)
-- [Payment](#payment)
-- [Delivery](#delivery)
+- [Payment](#payment)(In Progress)
+- [Delivery](#delivery)(In Progres)
 - [Customer Support](#customer-support)
 - [FAQ](#faq)
 - [About the Project](#about-the-project)
@@ -66,7 +66,7 @@ Detailed API documentation can be accessed at [https://documenter.getpostman.com
 4. Provide delivery details and select a delivery date/time.
 5. Review your order and proceed to payment.
 
-## Payment
+## Payment(In Progress)
 
 Secure payment options are integrated, allowing you to pay using major credit cards, debit cards, and digital wallets.
 
